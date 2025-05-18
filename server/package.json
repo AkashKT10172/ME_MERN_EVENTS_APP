@@ -1,0 +1,18 @@
+{
+  "name": "events-app-server",
+  "version": "1.0.0",
+  "description": "This is the server of the Events Management Application.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "author": "green-eyeliner",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.0",
+    "nodemon": "^3.1.10"
+  }
+}
