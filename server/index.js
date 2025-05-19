@@ -1,13 +1,24 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const app = express();
+const cors = require('cors');
 const connectDB = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const userRoutes = require('./routes/userRoutes');
+const app = express();
 dotenv.config();
-connectDB();
+connectDB(); 
 const PORT = process.env.PORT;
 
-app.get('/', () => {
-    console.log('Events Management Platform')
+app.use(cors());
+app.use(express.json());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/users', userRoutes);
+
+app.get('/', (req, res) => {
+    res.send('Events Management Platform is Running!')
 });
 
 app.listen(PORT, () => {
