@@ -6,11 +6,13 @@ const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require('./routes/eventRoutes');
+const startStatusUpdateCron = require('./utils/updateEventStatusCron');
 
 const app = express();
 dotenv.config();
 connectDB(); 
 const PORT = process.env.PORT;
+startStatusUpdateCron();
 
 app.use(cors());
 app.use(express.json());
