@@ -3,7 +3,7 @@ const Event = require('../models/Event');
 const sendEmail = require('../utils/sendEmail');
 
 
-exports.registerForEvent = async (req, res) => {
+const registerForEvent = async (req, res) => {
   const { eventId } = req.params;
   const userId = req.user._id;
 
@@ -31,7 +31,7 @@ exports.registerForEvent = async (req, res) => {
   }
 };
 
-exports.cancelRegistration = async (req, res) => {
+const cancelRegistration = async (req, res) => {
   const { eventId } = req.params;
   const userId = req.user._id;
 
@@ -48,7 +48,7 @@ exports.cancelRegistration = async (req, res) => {
   }
 };
 
-exports.getMyRegisteredEvents = async (req, res) => {
+const getMyRegisteredEvents = async (req, res) => {
   const userId = req.user._id;
 
   try {
@@ -60,3 +60,6 @@ exports.getMyRegisteredEvents = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+module.exports = { getMyRegisteredEvents, cancelRegistration, registerForEvent};

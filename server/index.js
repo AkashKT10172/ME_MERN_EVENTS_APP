@@ -9,11 +9,12 @@ const eventRoutes = require('./routes/eventRoutes');
 const registrationRoutes = require('./routes/registrationRoutes')
 const startStatusUpdateCron = require('./utils/updateEventStatusCron');
 const emailReminderCronJob = require('./utils/eventReminderCronJob');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const app = express();
 dotenv.config();
 connectDB(); 
-const PORT = process.env.PORT;
+
 startStatusUpdateCron();
 emailReminderCronJob();
 
@@ -26,10 +27,15 @@ app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registration', registrationRoutes);
 
+
 app.get('/', (req, res) => {
     res.send('Events Management Platform is Running!')
 });
 
+app.use(notFound);
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`);
 })
