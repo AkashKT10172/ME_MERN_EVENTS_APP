@@ -6,13 +6,16 @@ const authRoutes = require('./routes/authRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const userRoutes = require('./routes/userRoutes');
 const eventRoutes = require('./routes/eventRoutes');
+const registrationRoutes = require('./routes/registrationRoutes')
 const startStatusUpdateCron = require('./utils/updateEventStatusCron');
+const emailReminderCronJob = require('./utils/eventReminderCronJob');
 
 const app = express();
 dotenv.config();
 connectDB(); 
 const PORT = process.env.PORT;
 startStatusUpdateCron();
+emailReminderCronJob();
 
 app.use(cors());
 app.use(express.json());
@@ -21,6 +24,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/registration', registrationRoutes);
 
 app.get('/', (req, res) => {
     res.send('Events Management Platform is Running!')

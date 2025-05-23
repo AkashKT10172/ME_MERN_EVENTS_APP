@@ -25,7 +25,7 @@ const updateEventStatuses = async () => {
 };
 
 const startStatusUpdateCron = () => {
-  cron.schedule('*/60 * * * *', () => {
+  cron.schedule('0 * * * *', () => {
     console.log('⏰ Running event status updater...');
     updateEventStatuses();
   });
