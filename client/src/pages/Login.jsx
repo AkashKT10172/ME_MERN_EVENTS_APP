@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/authSlice';
 import { googleLoginUser, loginUser as loginUserAPI } from '../services/authService';
 import { signInWithPopup } from 'firebase/auth';
@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
+  const user = useSelector(state => state.auth.user);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -32,7 +33,7 @@ const LoginPage = () => {
         password: formData.password,
       });
 
-      dispatch(loginUser({ user: response.user.name, token: response.token }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
       navigate('/');
     } catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
@@ -53,14 +54,17 @@ const LoginPage = () => {
         avatar: user.photoURL,
       });
 
-      dispatch(loginUser({ user: response.user.name, token: response.token }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
       navigate('/');
     } catch (err) {
       console.error('Google login failed:', err);
       setError('Google login failed. Please try again.');
     }
   };
-
+  useEffect(() => {
+    if(user) 
+      navigate('/');
+  }, []);
   return (
     <div className="max-w-md mx-auto mt-10 p-4 shadow-md border rounded">
       <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>

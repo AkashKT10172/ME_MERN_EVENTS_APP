@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -20,8 +21,14 @@ const Navbar = () => {
           <>
             <Link to="/dashboard" className="hover:underline">Dashboard</Link>
             <Link to="/profile" className="hover:underline">Profile</Link>
-            {user.role === 'Admin' && (
+            {role === 'Admin' && (
+              <>
               <Link to="/admin" className="hover:underline">Admin</Link>
+              <Link to="/organizer" className="hover:underline">Organizer</Link>
+              </>
+            )}
+            {role === 'Organizer' && (
+              <Link to="/organizer" className="hover:underline">Organizer</Link>
             )}
             <button
               onClick={handleLogout}

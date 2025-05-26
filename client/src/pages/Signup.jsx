@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../store/authSlice';
 import { googleLoginUser, registerUser } from '../services/authService';
 import { signInWithPopup } from 'firebase/auth';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const SignupPage = () => {
+  const user = useSelector(state => state.auth.user);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -65,7 +66,7 @@ const SignupPage = () => {
         avatar: avatarUrl,
       });
 
-      dispatch(loginUser({ user: response.user.name, token: response.token }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
       navigate('/');
     } catch (err) {
       console.error('Signup failed:', err.response?.data || err.message);
@@ -86,13 +87,17 @@ const SignupPage = () => {
         avatar: user.photoURL,
       });
 
-      dispatch(loginUser({ user: response.user.name, token: response.token }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
       navigate('/');
     } catch (err) {
       console.error('Google login failed:', err);
       setError('Google login failed. Please try again.');
     }
   };
+  useEffect(() => {
+      if(user) 
+        navigate('/');
+    }, []);
 
   return (
     <div className="max-w-md mx-auto mt-10 p-4 shadow-md border rounded">
