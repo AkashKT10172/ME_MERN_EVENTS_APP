@@ -32,7 +32,7 @@ const getAllEvents = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const { search, eventType, location, status, date } = req.query;
+    const { search, eventType, location, status, date, sort } = req.query;
 
     let query = {};
 
@@ -46,13 +46,15 @@ const getAllEvents = async (req, res) => {
     if (eventType) query.eventType = eventType;
     if (location) query.location = { $regex: location, $options: 'i' };
     if (status) query.status = status;
-    if (date) query.date = { $gte: new Date(date) };
+    if (date) query.startDate = { $gte: new Date(date) };
+
+    const sortOrder = sort === 'asc' ? 1 : -1;
 
     const [events, total] = await Promise.all([
       Event.find(query)
         .skip(skip)
         .limit(limit)
-        .sort({ date: 1 }) // optional: sort by upcoming
+        .sort({ startDate: sortOrder })
         .populate('organizer', 'name avatar'),
       Event.countDocuments(query)
     ]);

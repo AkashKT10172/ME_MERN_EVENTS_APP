@@ -9,9 +9,9 @@ const Footer = () => {
     <footer className="w-full bg-indigo-950 text-white py-10">
       <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between">
 
-        <div className="mb-8 md:mb-0 md:w-1/3">
-          <h2 className="text-2xl font-bold text-yellow-400 mb-3">The Social Hub</h2>
-          <p className="text-gray-300">
+        <div className="mb-8 md:mb-0 md:w-1/4">
+          <h2 className="text-2xl font-bold text-yellow-400 mb-3 ">The Social Hub</h2>
+          <p className="text-gray-300 text-justify">
             Your go-to platform for discovering, managing, and creating amazing events. Join us and never miss out on the fun!
           </p>
         </div>
