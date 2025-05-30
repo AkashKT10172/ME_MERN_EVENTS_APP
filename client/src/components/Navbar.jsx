@@ -20,7 +20,7 @@ const Navbar = () => {
   return (
     <nav className="bg-indigo-950 text-white">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-        <Link to="/" onClick={() => setMenuOpen(false)} className="text-2xl font-bold text-yellow-400">The Social Hub</Link>
+        <Link to="/events" onClick={() => setMenuOpen(false)} className="text-2xl font-bold text-yellow-400">The Social Hub</Link>
 
         <div className="hidden md:flex space-x-6 items-center">
           {user ? (
@@ -85,8 +85,8 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/login" className="block hover:text-yellow-400 transition">Login</Link>
-              <Link to="/signup" className="block hover:text-yellow-400 transition">Signup</Link>
+              <Link to="/login" onClick={() => setMenuOpen(!menuOpen)} className="block hover:text-yellow-400 transition">Login</Link>
+              <Link to="/signup" onClick={() => setMenuOpen(!menuOpen)} className="block hover:text-yellow-400 transition">Signup</Link>
             </>
           )}
         </div>

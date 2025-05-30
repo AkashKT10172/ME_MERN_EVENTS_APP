@@ -36,6 +36,7 @@ const Events = () => {
 
   useEffect(() => {
     fetchEvents();
+    window.scrollTo(0, 0);
     localStorage.setItem("page", page);
   }, [page, sort]);
 
@@ -88,9 +89,8 @@ const Events = () => {
             setSort(e.target.value);
             setPage(1);
           }}
-          className="px-4 py-2 rounded-lg w-full md:w-40 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400
+          className="px-4 py-2 rounded-lg w-full md:w-64 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400
                     truncate"
-          style={{ maxWidth: '160px' }}
         >
           <option value="desc" className="truncate" title="Sort by Newest">Sort by Newest</option>
           <option value="asc" className="truncate" title="Sort by Oldest">Sort by Oldest</option>

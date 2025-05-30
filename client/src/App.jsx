@@ -1,7 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
@@ -19,38 +17,46 @@ const Organizer = lazy(() => import('./pages/Organizer'));
 const CreateEvent = lazy(() => import('./pages/CreateEvent'));
 const EditEvent = lazy(() => import('./pages/EditEvent'));
 
-
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => window.scrollTo(0, 0), [pathname]);
   return null;
 };
 
-function App() {
+const AppRoutes = () => {
+  const { pathname } = useLocation();
+  const hideLayout = pathname === '/'; // Add more paths if needed
+
   return (
     <>
-      <Router>
-        <ScrollToTop />
-        <Navbar />
-        <Suspense fallback={<Spinner />}>
+      <ScrollToTop />
+      {!hideLayout && <Navbar />}
+      <Suspense fallback={<Spinner />}>
         <Routes>
-          <Route path="/" element={<Home />} /> {/* we will show introduction, first 10 events on this page */}
-          <Route path="/events" element={<Events />} /> {/* this page will have all the events */}
-          <Route path="/events/:id" element={<EventView />} /> {/* view, register, cancel registration for an event */}
-          <Route path="/login" element={<Login />} /> {/* this is the login page */}
-          <Route path="/signup" element={<Signup />} /> {/* this is the signup page */}
-          <Route path="/dashboard" element={<Dashboard />} /> {/* user's dashboard: registered events, cancellations */}
-          <Route path="/profile" element={<Profile />} /> {/* user profile, update info, request organizer */}
-          <Route path="/admin" element={<Admin />} /> {/* admin activities */}
-          <Route path="/organizer" element={<Organizer />} /> {/* organizer activities */}
-          <Route path="/create_event" element={<CreateEvent />} /> {/* route to create an event */}
-          <Route path="/edit/:id" element={<EditEvent />} /> {/* route to edit an event */}
-          <Route path="*" element={<NotFound />} /> {/* fallback 404 page */}
+          <Route path="/" element={<Home />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:id" element={<EventView />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/organizer" element={<Organizer />} />
+          <Route path="/create_event" element={<CreateEvent />} />
+          <Route path="/edit/:id" element={<EditEvent />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-        </Suspense>
-        <Footer />
-      </Router>
+      </Suspense>
+      {!hideLayout && <Footer />}
     </>
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <AppRoutes />
+    </Router>
   );
 }
 

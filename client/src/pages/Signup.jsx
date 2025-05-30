@@ -14,7 +14,7 @@ const SignupPage = () => {
     name: '',
     email: '',
     password: '',
-    avatar: null, // Use avatar instead of avatarFile
+    avatar: null,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -94,31 +94,99 @@ const SignupPage = () => {
       setError('Google login failed. Please try again.');
     }
   };
+
   useEffect(() => {
-      if(user) 
-        navigate('/');
-    }, []);
+    if (user) navigate('/events');
+  }, [user, navigate]);
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 shadow-md border rounded">
-      <h2 className="text-2xl font-bold mb-4 text-center">Signup</h2>
-      {error && <p className="text-red-600">{error}</p>}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} required className="w-full p-2 border rounded" />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required className="w-full p-2 border rounded" />
-        <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required className="w-full p-2 border rounded" />
-        <input type="file" name="avatar" onChange={handleChange} accept="image/*" className="w-full p-2 border rounded" />
-        {preview && <img src={preview} alt="Avatar Preview" className="w-24 h-24 object-cover rounded-full mx-auto" />}
-        <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
-          {loading ? 'Registering...' : 'Signup'}
+    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 flex items-center justify-center px-4">
+      <div className="max-w-md w-full p-6 bg-[#1f1f2e] rounded-xl shadow-lg text-white">
+        <h2 className="text-3xl font-bold mb-6 text-center text-yellow-400">Signup</h2>
+        {error && <p className="bg-red-700 p-3 rounded mb-4 text-center">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            className="w-full p-3 rounded border border-gray-600 bg-[#29293f] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full p-3 rounded border border-gray-600 bg-[#29293f] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full p-3 rounded border border-gray-600 bg-[#29293f] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          />
+          <div className="relative w-full">
+            <input
+              type="file"
+              id="avatar"
+              name="avatar"
+              accept="image/*"
+              onChange={handleChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <label
+              htmlFor="avatar"
+              className="block w-full text-center p-3 border border-gray-600 rounded bg-[#29293f] text-white cursor-pointer hover:bg-yellow-400 hover:text-black transition"
+            >
+              {formData.avatar ? formData.avatar.name : 'Choose Avatar'}
+            </label>
+          </div>
+          {preview && (
+            <img
+              src={preview}
+              alt="Avatar Preview"
+              className="w-24 h-24 object-cover rounded-full mx-auto mt-3 border-2 border-yellow-400"
+            />
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-yellow-400 text-black p-3 rounded font-semibold hover:bg-yellow-300 transition"
+          >
+            {loading ? 'Registering...' : 'Signup'}
+          </button>
+          <button
+          type="button"
+          disabled={loading}
+          onClick={handleGoogleLogin}
+          className="w-full py-3 mt-2 bg-red-600 rounded font-semibold hover:bg-red-700 transition disabled:opacity-60 flex items-center justify-center gap-2"
+          aria-label="Login with Google"
+        >
+          <svg
+            className="w-6 h-6"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M21.805 10.023h-9.797v3.938h5.807c-.25 1.5-1.625 4.41-5.807 4.41-3.5 0-6.35-2.897-6.35-6.47s2.85-6.47 6.35-6.47c1.985 0 3.32.843 4.1 1.573l2.8-2.7C17.75 5.123 15.325 4.12 12.12 4.12 6.94 4.12 2.68 8.51 2.68 13.684c0 5.17 4.26 9.56 9.44 9.56 5.447 0 9.07-3.825 9.07-9.22 0-.62-.07-1.095-.385-1.98z"/>
+          </svg>
+          Signup with Google
         </button>
-        <button type="button" disabled={loading} onClick={handleGoogleLogin} className="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700">
-          <i className="bi bi-google me-1" /> Sign Up with Google
-        </button>
-      </form>
-      <p className="text-center mt-2">
-        Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Log in</Link>
-      </p>
+        </form>
+        <p className="text-center mt-5 text-gray-300">
+          Already have an account?{' '}
+          <Link to="/login" className="text-yellow-400 hover:underline">
+            Log in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

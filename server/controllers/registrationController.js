@@ -61,5 +61,17 @@ const getMyRegisteredEvents = async (req, res) => {
   }
 };
 
+const isUserRegistered = async(req, res) => {
+  const userId = req.user._id;
+  const { eventId } = req.params;
+  try {
+    const registration = await Registration.findOne({ event: eventId, user: userId, cancelled: false });
+    if(!registration) res.json({ message: 'No' });
+    else res.json({ message: 'Yes' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+}
 
-module.exports = { getMyRegisteredEvents, cancelRegistration, registerForEvent};
+
+module.exports = { getMyRegisteredEvents, cancelRegistration, registerForEvent, isUserRegistered};
