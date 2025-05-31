@@ -43,6 +43,7 @@ const updateUserProfile = async (req, res) => {
       name: user.name,
       email: user.email,
       avatar: user.avatar,
+      organizerApprovalStatus: user.organizerApprovalStatus,
       role: user.role
     });
   } catch (err) {

@@ -53,7 +53,14 @@ const getMyRegisteredEvents = async (req, res) => {
 
   try {
     const registrations = await Registration.find({ user: userId, cancelled: false })
-      .populate('event', '-__v');
+      .populate({
+        path: 'event',
+        select: '-__v',
+        populate: {
+          path: 'organizer',
+          select: 'name email', // include any fields you want to show
+        },
+      });
 
     res.json(registrations);
   } catch (err) {
