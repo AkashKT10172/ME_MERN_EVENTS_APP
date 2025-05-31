@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Spinner from "../components/Spinner";
@@ -11,6 +11,7 @@ import {
 
 const EventView = () => {
   const user = useSelector((state) => state.auth.user);
+  const role = useSelector((state) => state.auth.role);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -115,6 +116,17 @@ const EventView = () => {
                 {registering ? "Cancelling..." : "Cancel Registration"}
               </button>
             )}
+          </div>
+          <div className="my-1">
+            {
+              role === 'Admin' && <Link to={`/admin/events/${id}`}>
+                <button
+                  className={`px-6 py-3 rounded-xl transition bg-blue-600 hover:bg-blue-700 text-white`}
+                >
+                  See Registrations
+                </button>
+              </Link>
+            }
           </div>
         </div>
       </div>

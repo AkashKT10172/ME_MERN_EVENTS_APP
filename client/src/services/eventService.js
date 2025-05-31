@@ -11,3 +11,4 @@ export const getEventById = async(id) => {
   const response = await axios.get(`${API_URL}/api/events/${id}`);
   return response.data;
 }
+

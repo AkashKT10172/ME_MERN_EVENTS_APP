@@ -16,6 +16,7 @@ const Admin = lazy(() => import('./pages/Admin'));
 const Organizer = lazy(() => import('./pages/Organizer'));
 const CreateEvent = lazy(() => import('./pages/CreateEvent'));
 const EditEvent = lazy(() => import('./pages/EditEvent'));
+const EventRegistrations = lazy(() => import('./pages/EventRegistrations'));
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -41,6 +42,7 @@ const AppRoutes = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/events/:id" element={<EventRegistrations />} />
           <Route path="/organizer" element={<Organizer />} />
           <Route path="/create_event" element={<CreateEvent />} />
           <Route path="/edit/:id" element={<EditEvent />} />
