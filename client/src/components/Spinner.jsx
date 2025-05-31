@@ -1,5 +1,5 @@
 const Spinner = () => (
-  <div className="flex justify-center items-center h-64">
+  <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 flex justify-center items-center">
     <svg
       className="animate-spin -ml-1 mr-3 h-10 w-10 text-blue-600"
       xmlns="http://www.w3.org/2000/svg"

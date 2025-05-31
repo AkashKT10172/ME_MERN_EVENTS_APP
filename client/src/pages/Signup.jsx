@@ -112,7 +112,7 @@ const SignupPage = () => {
             value={formData.name}
             onChange={handleChange}
             required
-            className="w-full p-3 rounded border border-gray-600 bg-[#29293f] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
           <input
             type="email"
@@ -121,7 +121,7 @@ const SignupPage = () => {
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full p-3 rounded border border-gray-600 bg-[#29293f] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
           <input
             type="password"
@@ -130,7 +130,7 @@ const SignupPage = () => {
             value={formData.password}
             onChange={handleChange}
             required
-            className="w-full p-3 rounded border border-gray-600 bg-[#29293f] text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
           <div className="relative w-full">
             <input
