@@ -18,6 +18,7 @@ const EventView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [registered, setRegistered] = useState(false);
+  const [registering, setRegistering] = useState(false);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -39,20 +40,26 @@ const EventView = () => {
 
   const handleRegister = async () => {
     if (!user) return navigate("/login");
+    setRegistering(true);
     try {
       await registerForEvent(id);
       setRegistered(true);
     } catch (err) {
       console.error(err);
+    } finally {
+      setRegistering(false);
     }
   };
 
   const handleCancelRegistration = async () => {
+    setRegistering(true);
     try {
       await cancelRegistration(id);
       setRegistered(false);
     } catch (err) {
       console.error(err);
+    } finally {
+      setRegistering(false);
     }
   };
 
@@ -61,40 +68,54 @@ const EventView = () => {
     return <div className="text-center text-red-500 mt-8">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-700 via-purple-800 to-indigo-900 text-white">
-      <img
-        src={event.image || "/default-banner.jpg"}
-        alt="Event"
-        className="w-full h-80 object-cover"
-      />
-      <div className="p-6 md:p-12">
-        <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
-        <div className="text-yellow-400 text-lg mb-1">
-          Status: {event.status}
-        </div>
-        <div className="text-gray-200 mb-2">
-          Date: {new Date(event.startDate).toLocaleDateString()}
-        </div>
-        <div className="text-gray-200 mb-2">Time: {event.startTime}</div>
-        <div className="text-gray-300 mb-6">Location: {event.location}</div>
-        <p className="text-gray-100 text-lg mb-8">{event.description}</p>
+    <div className="min-h-screen bg-gradient-to-b from-purple-700 via-purple-800 to-indigo-900 text-white py-10 px-2">
+      <div className="max-w-4xl mx-auto bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
+        <img
+          src={event.image || "/default-banner.jpg"}
+          alt="Event"
+          className="w-full h-64 object-cover"
+        />
+        <div className="p-6 md:p-8">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">{event.title}</h1>
+          <div className="text-yellow-400 text-lg mb-1">
+            Status: {event.status}
+          </div>
+          <div className="text-gray-300 mb-1">
+            Date: {new Date(event.startDate).toLocaleDateString()}
+          </div>
+          <div className="text-gray-300 mb-1">Time: {event.startTime}</div>
+          <div className="text-gray-400 mb-4">Location: {event.location}</div>
+          <p className="text-gray-200 text-base mb-6">{event.description}</p>
 
-        <div className="flex flex-wrap gap-4">
-          {!registered ? (
-            <button
-              onClick={handleRegister}
-              className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl text-white transition"
-            >
-              Register
-            </button>
-          ) : (
-            <button
-              onClick={handleCancelRegistration}
-              className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-xl text-white transition"
-            >
-              Cancel Registration
-            </button>
-          )}
+          <div className="flex flex-wrap gap-4">
+            {event.status === "Completed" ? (
+              <></>
+            ) : !registered ? (
+              <button
+                onClick={handleRegister}
+                disabled={registering}
+                className={`px-6 py-3 rounded-xl transition ${
+                  registering
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                } text-white`}
+              >
+                {registering ? "Registering..." : "Register"}
+              </button>
+            ) : (
+              <button
+                onClick={handleCancelRegistration}
+                disabled={registering}
+                className={`px-6 py-3 rounded-xl transition ${
+                  registering
+                    ? "bg-red-400 cursor-not-allowed"
+                    : "bg-red-600 hover:bg-red-700"
+                } text-white`}
+              >
+                {registering ? "Cancelling..." : "Cancel Registration"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
