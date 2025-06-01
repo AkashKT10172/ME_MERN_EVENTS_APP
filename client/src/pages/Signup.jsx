@@ -66,7 +66,7 @@ const SignupPage = () => {
         avatar: avatarUrl,
       });
 
-      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role, mail: response.user.email }));
       navigate('/');
     } catch (err) {
       console.error('Signup failed:', err.response?.data || err.message);
@@ -87,7 +87,7 @@ const SignupPage = () => {
         avatar: user.photoURL,
       });
 
-      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role, mail: response.user.email }));
       navigate('/');
     } catch (err) {
       console.error('Google login failed:', err);

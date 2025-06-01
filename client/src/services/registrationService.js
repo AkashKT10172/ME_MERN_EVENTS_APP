@@ -28,6 +28,5 @@ export const cancelRegistration = async (id) => {
 
 export const getUsersRegistration = async () => {
   const response = await axios.get(`${API_URL}/my-events`, getAuthConfig());
-  console.log(response.data);
   return response.data;
 };

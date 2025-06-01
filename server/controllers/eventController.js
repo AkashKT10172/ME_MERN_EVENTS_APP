@@ -75,7 +75,7 @@ const getEventById = async (req, res) => {
   try {
     const event = await Event.findById(req.params.id).populate(
       "organizer",
-      "name avatar"
+      "name avatar email"
     );
     if (!event) return res.status(404).json({ message: "Event not found" });
 
@@ -134,12 +134,12 @@ const deleteEvent = async (req, res) => {
 
 const getEventsByOrganizer = async (req, res) => {
   try {
-    const organizerId = req.params.id;
+    const organizerId = req.user._id;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
-
-    const { search, eventType, location, status, date } = req.query;
+    // console.log(req.query);
+    const { search, eventType, location, status, date, sort } = req.query;
 
     let query = { organizer: organizerId };
 
@@ -155,11 +155,13 @@ const getEventsByOrganizer = async (req, res) => {
     if (status) query.status = status;
     if (date) query.startDate = { $gte: new Date(date) };
 
+    const sortOrder = sort === 'asc' ? 1 : -1;
+
     const [events, total] = await Promise.all([
       Event.find(query)
         .skip(skip)
         .limit(limit)
-        .sort({ startDate: 1 })
+        .sort({ startDate: sortOrder })
         .populate('organizer', 'name avatar'),
       Event.countDocuments(query)
     ]);

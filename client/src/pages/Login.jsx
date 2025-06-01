@@ -27,7 +27,7 @@ const LoginPage = () => {
         email: formData.email,
         password: formData.password,
       });
-      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role, mail: response.user.email }));
       navigate('/');
     } catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
@@ -48,7 +48,7 @@ const LoginPage = () => {
         email: user.email,
         avatar: user.photoURL,
       });
-      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role }));
+      dispatch(loginUser({ user: response.user.name, token: response.token, role: response.user.role, mail: response.user.email }));
       navigate('/');
     } catch (err) {
       console.error('Google login failed:', err);

@@ -8,10 +8,12 @@ import {
   registerForEvent,
   checkUserRegistration,
 } from "../services/registrationService";
+import { deleteAnEvent } from "../services/organizerService";
 
 const EventView = () => {
   const user = useSelector((state) => state.auth.user);
   const role = useSelector((state) => state.auth.role);
+  const mail = useSelector((state) => state.auth.mail);
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -30,6 +32,7 @@ const EventView = () => {
           if (isRegistered.message === "Yes") setRegistered(true);
         }
         setEvent(res);
+        // console.log(res);
       } catch (err) {
         setError("Failed to load event");
       } finally {
@@ -61,6 +64,16 @@ const EventView = () => {
       console.error(err);
     } finally {
       setRegistering(false);
+    }
+  };
+
+  const handleDelete = async (eventId) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    try {
+      await deleteAnEvent(eventId);
+      navigate('/events');
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -97,8 +110,8 @@ const EventView = () => {
                 disabled={registering}
                 className={`px-6 py-3 rounded-xl transition ${
                   registering
-                    ? "bg-blue-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700"
+                    ? "bg-green-400 cursor-not-allowed"
+                    : "bg-green-600 hover:bg-green-700"
                 } text-white`}
               >
                 {registering ? "Registering..." : "Register"}
@@ -117,7 +130,7 @@ const EventView = () => {
               </button>
             )}
           </div>
-          <div className="my-1">
+          <div className="my-1 flex">
             {
               role === 'Admin' && <Link to={`/admin/events/${id}`}>
                 <button
@@ -126,6 +139,15 @@ const EventView = () => {
                   See Registrations
                 </button>
               </Link>
+            }
+            {
+              role === 'Admin' || mail === event.organizer.email ?
+                <button
+                  onClick={() => handleDelete(event._id)}
+                  className={`mx-2 px-6 py-3 rounded-xl transition bg-red-600 hover:bg-red-700 text-white`}
+                >
+                  Delete Event
+                </button> : <></>
             }
           </div>
         </div>
