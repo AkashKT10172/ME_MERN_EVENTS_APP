@@ -21,3 +21,13 @@ export const deleteAnEvent = async (id) => {
     const response = await axios.delete(`${API_URL}/api/events/${id}`, getOrganizerConfig());
     return response.data;
 }
+
+export const createAnEvent = async (data) => {
+    const response = await axios.post(`${API_URL}/api/events/`, data, getOrganizerConfig());
+    return response.data;
+}
+
+export const editAnEvent = async (id, data) => {
+  const response = await axios.put(`${API_URL}/api/events/${id}`, data, getOrganizerConfig());
+  return response.data;
+}
