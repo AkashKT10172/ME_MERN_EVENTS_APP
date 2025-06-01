@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import NotFound from './components/NotFound';
 import Spinner from './components/Spinner';
+import { Toaster } from 'react-hot-toast';
 
 const Home = lazy(() => import('./pages/Home'));
 const Events = lazy(() => import('./pages/Events'));
@@ -31,6 +32,7 @@ const AppRoutes = () => {
   return (
     <>
       <ScrollToTop />
+      <Toaster position="top-right" reverseOrder={false} />
       {!hideLayout && <Navbar />}
       <Suspense fallback={<Spinner />}>
         <Routes>

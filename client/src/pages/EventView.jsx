@@ -9,6 +9,7 @@ import {
   checkUserRegistration,
 } from "../services/registrationService";
 import { deleteAnEvent } from "../services/organizerService";
+import {notifyError, notifySuccess} from '../utils/toastUtils'
 
 const EventView = () => {
   const user = useSelector((state) => state.auth.user);
@@ -35,6 +36,7 @@ const EventView = () => {
         // console.log(res);
       } catch (err) {
         setError("Failed to load event");
+        notifyError('failed to fetch event data!')
       } finally {
         setLoading(false);
       }
@@ -48,8 +50,10 @@ const EventView = () => {
     try {
       await registerForEvent(id);
       setRegistered(true);
+      notifySuccess('Event Registration Successful!')
     } catch (err) {
       console.error(err);
+      notifyError('Event Registration Failed!')
     } finally {
       setRegistering(false);
     }
@@ -60,8 +64,10 @@ const EventView = () => {
     try {
       await cancelRegistration(id);
       setRegistered(false);
+      notifySuccess('Registration Cancellation Successful!')
     } catch (err) {
       console.error(err);
+      notifyError('Registration Cancellation Failed!')
     } finally {
       setRegistering(false);
     }
@@ -72,8 +78,10 @@ const EventView = () => {
     try {
       await deleteAnEvent(eventId);
       navigate('/events');
+      notifySuccess('Event Deletion Successful!')
     } catch (err) {
       console.error(err);
+      notifyError('Event Deletion Failed!')
     }
   };
 

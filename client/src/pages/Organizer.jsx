@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { deleteAnEvent, getOrganizersEvents } from '../services/organizerService';
+import { notifySuccess, notifyError } from '../utils/toastUtils';
 
 const OrganizerDashboard = () => {
   const prev_page = localStorage.getItem("page");
@@ -30,6 +31,7 @@ const OrganizerDashboard = () => {
       setTotalPages(res.totalPages);
     } catch (err) {
       console.error(err);
+      notifyError('Event Fetching Failed!')
     } finally {
       setLoading(false);
     }
@@ -46,8 +48,10 @@ const OrganizerDashboard = () => {
     try {
       await deleteAnEvent(eventId);
       setEvents(events.filter(e => e._id !== eventId));
+      notifySuccess('Event Deleted Successfully!');
     } catch (err) {
       console.error(err);
+      notifyError('Event Deletion Failed!')
     }
   };
 

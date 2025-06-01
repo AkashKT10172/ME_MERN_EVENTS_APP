@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createAnEvent } from '../services/organizerService';
 import { uploadImageToCloudinary } from '../utils/uploadImageToCloudinary';
+import { notifyError, notifySuccess } from '../utils/toastUtils';
 
 const CreateEvent = () => {
   const [formData, setFormData] = useState({
@@ -63,10 +64,12 @@ const CreateEvent = () => {
 
       await createAnEvent(payload);
       alert('Event created successfully!');
+      notifySuccess('Event Created Successfully!');
       navigate('/organizer');
     } catch (err) {
       console.error(err);
       setError('Failed to create event.');
+      notifyError('Event Creation Failed!');
     } finally {
       setLoading(false);
     }

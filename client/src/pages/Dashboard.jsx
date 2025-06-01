@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { getUsersRegistration } from '../services/registrationService';
 import { useSelector } from 'react-redux';
+import {notifyError} from '../utils/toastUtils'
 
 const Dashboard = () => {
   const user = useSelector((state) => state.auth.user);
@@ -18,6 +19,7 @@ const Dashboard = () => {
       } catch (err) {
         console.error(err);
         setError('Failed to load dashboard');
+        notifyError('Failed to load dashboard!');
       } finally {
         setLoading(false);
       }

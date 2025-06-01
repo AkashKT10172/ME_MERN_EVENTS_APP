@@ -2,21 +2,22 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { getEventRegistrations } from '../services/adminService';
+import {notifyError, notifySuccess} from '../utils/toastUtils'
 
 const EventRegistration = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
-  const [eventName, setEventName] = useState('');
 
   useEffect(() => {
     const fetchRegistrations = async () => {
       try {
         const res = await getEventRegistrations(id);
-        setRegistrations(res.registrations);
-        setEventName(res.eventName);
+        setRegistrations(res);
+        notifySuccess('Event data fetched successfully!')
       } catch (err) {
         console.error(err);
+        notifyError('Failed to fetch event data!')
       } finally {
         setLoading(false);
       }
@@ -30,7 +31,7 @@ const EventRegistration = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 text-white py-10 px-4">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-yellow-400 mb-8 text-center">
-            Registrations : {eventName}
+            Event Registrations
         </h2>
 
         {registrations.length === 0 ? (

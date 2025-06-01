@@ -47,15 +47,11 @@ const rejectOrganizerRequest = async (req, res) => {
 const getRegistrationsForEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
-    let eventName = '';
     const registrations = await Registration.find({ event: eventId, cancelled: false })
       .populate('user', 'name email avatar role')
       .populate('event', 'title')// Select fields you want
       .sort({ registeredAt: -1 });
-
-    if(registrations) eventName = registrations[0].event.title;
-    // console.log(eventName);
-    res.json({eventName, registrations});
+    res.json(registrations);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error fetching registrations' });

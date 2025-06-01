@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Spinner from '../components/Spinner';
 import { fetchUserProfile, updateUserProfile, requestOrganizer } from '../services/userService';
-
+import { notifyError, notifySuccess } from '../utils/toastUtils';
+import { uploadImageToCloudinary } from '../utils/uploadImageToCloudinary';
 const Profile = () => {
 
   const [loading, setLoading] = useState(true);
@@ -29,24 +30,13 @@ const Profile = () => {
         setOraganizerRequest(user.organizerApprovalStatus);
       } catch {
         setError('Failed to fetch profile');
+        notifyError('Failed to fetch profile')
       } finally {
         setLoading(false);
       }
     };
     fetchProfileData();
   }, []);
-
-  const uploadToCloudinary = async (file) => {
-    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-    const data = new FormData();
-    data.append('file', file);
-    data.append('upload_preset', uploadPreset);
-
-    const res = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, data);
-    return res.data.secure_url;
-  };
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -68,17 +58,18 @@ const Profile = () => {
     try {
       let updatedAvatar = avatarUrl;
       if (formData.avatar) {
-        updatedAvatar = await uploadToCloudinary(formData.avatar);
+        updatedAvatar = await uploadImageToCloudinary(formData.avatar);
       }
 
       await updateUserProfile({
         ...formData,
         avatar: updatedAvatar,
       });
-
+      notifySuccess('Profile Updated!')
       
     } catch (err) {
       setError(err.response?.data?.message || 'Update failed. Please try again.');
+      notifyError('Update failed. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -88,8 +79,10 @@ const Profile = () => {
     try {
       await requestOrganizer();
       setOraganizerRequest('pending');
+      notifySuccess('Organizer Request Sent!')
     } catch (err) {
       setError(err.response?.data?.message || 'Update failed. Please try again.');
+      notifyError('Update failed. Please try again.');
     } finally {
       setSubmitting(false);
     }

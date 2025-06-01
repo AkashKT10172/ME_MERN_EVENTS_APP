@@ -4,6 +4,7 @@ import { editAnEvent } from '../services/organizerService';
 import { uploadImageToCloudinary } from '../utils/uploadImageToCloudinary';
 import {getEventById} from '../services/eventService'
 import { useParams } from 'react-router-dom';
+import {notifyError, notifySuccess} from '../utils/toastUtils'
 
 const EditEvent = () => {
   const { id } = useParams();
@@ -45,8 +46,10 @@ const EditEvent = () => {
           });
           setImage(res.image);
           setPreview(res.image);
+          notifySuccess('Event data fetched successfully!')
         } catch (err) {
           setError("Failed to load event");
+          notifyError('Failed to fetch event data!')
         } finally {
           setLoading(false);
         }
@@ -88,11 +91,12 @@ const EditEvent = () => {
       };
 
       await editAnEvent(id, payload);
-      alert('Event Edited successfully!');
+      notifySuccess('Event Edited successfully!');
       navigate('/organizer');
     } catch (err) {
       console.error(err);
-      setError('Failed to create event.');
+      setError('Failed to edit event.');
+      notifyError('Failed to edit event.');
     } finally {
       setLoading(false);
     }

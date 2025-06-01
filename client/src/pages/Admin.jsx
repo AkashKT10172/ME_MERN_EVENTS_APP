@@ -5,6 +5,7 @@ import {
   getPendingOrganizerRequests,
   rejectOrganizerRequest,
 } from '../services/adminService';
+import { notifySuccess, notifyError } from '../utils/toastUtils';
 
 const Admin = () => {
   const [requests, setRequests] = useState([]);
@@ -17,6 +18,7 @@ const Admin = () => {
         setRequests(response);
       } catch (err) {
         console.error(err);
+        notifyError('Failed to fecth data!')
       } finally {
         setLoading(false);
       }
@@ -28,8 +30,10 @@ const Admin = () => {
     try {
       await approveOrganizerRequest(reqId);
       setRequests(requests.filter((req) => req._id !== reqId));
+      notifySuccess('Request Approved!')
     } catch (err) {
       console.error(err);
+      notifyError('Fail to approve request!')
     }
   };
 
@@ -37,8 +41,10 @@ const Admin = () => {
     try {
       await rejectOrganizerRequest(reqId);
       setRequests(requests.filter((req) => req._id !== reqId));
+      notifySuccess('Request rejected!')
     } catch (err) {
       console.error(err);
+      notifyError('Fail to reject request!')
     }
   };
 
