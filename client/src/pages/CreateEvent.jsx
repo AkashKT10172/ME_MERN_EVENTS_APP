@@ -63,7 +63,6 @@ const CreateEvent = () => {
       };
 
       await createAnEvent(payload);
-      alert('Event created successfully!');
       notifySuccess('Event Created Successfully!');
       navigate('/organizer');
     } catch (err) {

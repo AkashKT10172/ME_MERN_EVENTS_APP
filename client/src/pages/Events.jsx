@@ -119,7 +119,7 @@ const Events = () => {
               className="rounded-2xl border border-purple-700 bg-gradient-to-br from-[#1f1f2e] to-[#29293f] shadow-lg hover:shadow-2xl transition duration-300 p-5"
             >
               <img
-                src={event.imageUrl || "https://placehold.co/400x200"}
+                src={event.image || "https://placehold.co/400x200"}
                 alt={event.title}
                 className="rounded-lg mb-4 h-40 w-full object-cover border border-purple-800"
               />

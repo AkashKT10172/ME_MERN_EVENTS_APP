@@ -140,7 +140,7 @@ const EventView = () => {
           </div>
           <div className="my-1 flex">
             {
-              role === 'Admin' && <Link to={`/admin/events/${id}`}>
+              (role === 'Admin' || mail === event.organizer.email) && <Link to={`/admin/events/${id}`}>
                 <button
                   className={`px-6 py-3 rounded-xl transition bg-blue-600 hover:bg-blue-700 text-white`}
                 >
