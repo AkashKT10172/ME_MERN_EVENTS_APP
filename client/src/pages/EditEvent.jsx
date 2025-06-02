@@ -5,8 +5,12 @@ import { uploadImageToCloudinary } from '../utils/uploadImageToCloudinary';
 import {getEventById} from '../services/eventService'
 import { useParams } from 'react-router-dom';
 import {notifyError, notifySuccess} from '../utils/toastUtils'
+import { useSelector } from 'react-redux';
 
 const EditEvent = () => {
+  const role = useSelector((state) => state.auth.role);
+  const navigate = useNavigate();
+
   const { id } = useParams();
   const [formData, setFormData] = useState({
     title: '',
@@ -25,9 +29,13 @@ const EditEvent = () => {
   const [preview, setPreview] = useState(null);
   const [error, setError] = useState('');
   const [image, setImage] = useState('');
-  const navigate = useNavigate();
 
   useEffect(() => {
+    if(role === 'Participant') {
+      notifyError('Forbidden');
+      navigate('/events');
+      return;
+    }
     const fetchEvent = async () => {
         try {
           const res = await getEventById(id);
@@ -103,8 +111,8 @@ const EditEvent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 flex items-center justify-center px-4">
-      <div className="max-w-2xl w-full p-6 bg-[#1f1f2e] rounded-xl shadow-lg text-white my-4">
+    <div className="min-h-screen bg-[#2a2a2a] flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full p-6 bg-[#1e1e1e] rounded-xl shadow-lg text-white my-4">
         <h2 className="text-3xl font-bold mb-6 text-center text-yellow-400">Edit Event</h2>
         {error && <p className="bg-red-700 p-3 rounded mb-4 text-center">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -114,22 +122,22 @@ const EditEvent = () => {
             placeholder="Event Title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
           <textarea
             name="description"
             placeholder="Event Description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
           />
           <div className="flex gap-2">
-            <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50" />
-            <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50" />
+            <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white" />
+            <input type="time" name="startTime" value={formData.startTime} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white" />
           </div>
           <div className="flex gap-2">
-            <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50" />
-            <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50" />
+            <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white" />
+            <input type="time" name="endTime" value={formData.endTime} onChange={handleChange} className="w-1/2 p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white" />
           </div>
           <input
             type="text"
@@ -137,13 +145,13 @@ const EditEvent = () => {
             placeholder="Location"
             value={formData.location}
             onChange={handleChange}
-            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white"
           />
           <select
             name="eventType"
             value={formData.eventType}
             onChange={handleChange}
-            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white"
           >
             <option value="Offline">Offline</option>
             <option value="Online">Online</option>
@@ -154,7 +162,7 @@ const EditEvent = () => {
             placeholder="Category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50"
+            className="w-full p-3 rounded bg-gray-800 border border-yellow-400 text-yellow-50 placeholder-white"
           />
           <div className="relative w-full">
             <input

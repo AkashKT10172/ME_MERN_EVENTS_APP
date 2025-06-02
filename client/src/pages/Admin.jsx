@@ -6,12 +6,22 @@ import {
   rejectOrganizerRequest,
 } from '../services/adminService';
 import { notifySuccess, notifyError } from '../utils/toastUtils';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Admin = () => {
+  const role = useSelector((state) => state.auth.role);
+  const navigate = useNavigate();
+  
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if(role !== 'Admin') {
+      notifyError('Forbidden');
+      navigate('/events');
+      return;
+    }
     const fetchAdminData = async () => {
       try {
         const response = await getPendingOrganizerRequests();
@@ -51,7 +61,7 @@ const Admin = () => {
   if (loading) return <Spinner />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 text-white py-10 px-4">
+    <div className="min-h-screen bg-[#2a2a2a] text-white py-10 px-4">
       <h2 className="text-3xl font-bold text-yellow-400 text-center mb-8">
         Organizer Requests
       </h2>
@@ -63,7 +73,7 @@ const Admin = () => {
           {requests.map((req) => (
             <div
               key={req._id}
-              className="bg-indigo-950/80 backdrop-blur-md border border-indigo-800 rounded-2xl p-5 shadow-xl transition hover:shadow-yellow-400/20"
+              className="bg-[#1e1e1e] backdrop-blur-md rounded-2xl p-5 shadow-xl transition hover:shadow-yellow-400/20"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">

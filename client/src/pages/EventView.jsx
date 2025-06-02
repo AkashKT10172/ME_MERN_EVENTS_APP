@@ -90,7 +90,7 @@ const EventView = () => {
     return <div className="text-center text-red-500 mt-8">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-700 via-purple-800 to-indigo-900 text-white py-10 px-2">
+    <div className="min-h-screen bg-[#2a2a2a] text-white py-10 px-2">
       <div className="max-w-4xl mx-auto bg-[#1e1e1e] rounded-2xl shadow-lg overflow-hidden">
         <img
           src={event.image || "/default-banner.jpg"}
@@ -102,7 +102,7 @@ const EventView = () => {
           <div className="text-yellow-400 text-lg mb-1">
             Status: {event.status}
           </div>
-          <div className="text-gray-300 mb-1">
+          <div className="text-gray-300 mb-1">   
             Date: {new Date(event.startDate).toLocaleDateString()}
           </div>
           <div className="text-gray-300 mb-1">Time: {event.startTime}</div>

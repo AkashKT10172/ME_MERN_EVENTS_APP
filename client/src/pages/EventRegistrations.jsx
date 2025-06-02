@@ -3,13 +3,22 @@ import { useParams } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { getEventRegistrations } from '../services/adminService';
 import {notifyError, notifySuccess} from '../utils/toastUtils'
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const EventRegistration = () => {
   const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const role = useSelector((state) => state.auth.role);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if(role === 'Participant') {
+      notifyError('Forbidden');
+      navigate('/events');
+      return;
+    }
     const fetchRegistrations = async () => {
       try {
         const res = await getEventRegistrations(id);
@@ -28,20 +37,20 @@ const EventRegistration = () => {
   if (loading) return <Spinner />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 text-white py-10 px-4">
+    <div className="min-h-screen bg-[#2a2a2a] text-white py-10 px-4">
       <div className="max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-yellow-400 mb-8 text-center">
             Event Registrations
         </h2>
 
         {registrations.length === 0 ? (
-          <p className="text-center text-gray-300">No registrations found.</p>
-        ) : (
+          <p className="text-center text-gray-300">No registrations found.</p>       
+        ) : ( 
           <div className="space-y-4">
             {registrations.map(reg => (
               <div
                 key={reg._id}
-                className="bg-[#1e1e1e] rounded-2xl p-4 shadow-md flex items-center justify-between"
+                className="bg-[#1e1e1e] rounded-2xl p-4 flex items-center justify-between shadow-xl transition hover:shadow-yellow-400/20"
               >
                 <div className="flex items-center gap-4">
                   <img

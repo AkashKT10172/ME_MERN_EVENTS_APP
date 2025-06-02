@@ -32,7 +32,7 @@ const AppRoutes = () => {
   return (
     <>
       <ScrollToTop />
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster position="bottom-right" reverseOrder={false} />
       {!hideLayout && <Navbar />}
       <Suspense fallback={<Spinner />}>
         <Routes>

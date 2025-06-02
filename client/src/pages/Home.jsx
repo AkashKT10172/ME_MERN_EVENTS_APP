@@ -1,10 +1,9 @@
-import React from 'react'
 import {Link} from 'react-router-dom'
 
 const Home = () => {
   localStorage.setItem('page', 1);
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-gradient-to-r from-purple-700 via-purple-800 to-indigo-900 text-white text-center px-6">
+    <div className="w-full h-screen flex items-center justify-center bg-[#2a2a2a] text-white text-center px-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight mb-6">
           Welcome to <span className="text-yellow-400">The Social Hub</span>

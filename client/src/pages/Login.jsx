@@ -63,8 +63,8 @@ const LoginPage = () => {
   }, [user, navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 flex items-center justify-center px-4">
-      <div className="max-w-md w-full p-6 bg-[#1f1f2e] rounded-xl shadow-lg text-white">
+    <div className="min-h-screen bg-[#2a2a2a] flex items-center justify-center px-4">
+      <div className="max-w-md w-full p-6 bg-[#1e1e1e] rounded-xl shadow-lg text-white">
       <h2 className="text-3xl font-bold mb-6 text-center text-yellow-400">Login</h2>
       {error && <p className="bg-red-700 p-3 rounded mb-4 text-center">{error}</p>}
 

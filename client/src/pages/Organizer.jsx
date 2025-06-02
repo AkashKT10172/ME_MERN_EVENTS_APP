@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Spinner from '../components/Spinner';
 import { deleteAnEvent, getOrganizersEvents } from '../services/organizerService';
 import { notifySuccess, notifyError } from '../utils/toastUtils';
+import { useSelector } from 'react-redux';
 
 const OrganizerDashboard = () => {
   const prev_page = localStorage.getItem("page");
@@ -14,6 +15,7 @@ const OrganizerDashboard = () => {
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState('desc');
+  const role = useSelector((state) => state.auth.role);
   const navigate = useNavigate();
 
   const fetchOrganizerEvents = async () => {
@@ -38,6 +40,11 @@ const OrganizerDashboard = () => {
   };
 
   useEffect(() => {
+    if(role === 'Participant') {
+      notifyError('Forbidden');
+      navigate('/events');
+      return;
+    }
     fetchOrganizerEvents();
     window.scrollTo(0, 0);
     localStorage.setItem("page", page);
@@ -73,7 +80,7 @@ const OrganizerDashboard = () => {
   if (loading) return <Spinner />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 text-white p-6">
+    <div className="min-h-screen bg-[#2a2a2a] text-white p-6">
       <h1 className="text-4xl font-bold mb-10 text-center text-yellow-400">
         Welcome Organizer!
       </h1>
@@ -92,21 +99,21 @@ const OrganizerDashboard = () => {
           placeholder="Search events..."
           value={search}
           onChange={handleSearchChange}
-          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-yellow-400 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <input
           type="text"
           placeholder="Event type (e.g. Music)"
           value={eventType}
           onChange={handleFilterChange}
-          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-yellow-400 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <input
           type="text"
           placeholder="Location"
           value={location}
           onChange={handleLocationChange}
-          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-yellow-400 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <select
           value={sort}
@@ -114,7 +121,7 @@ const OrganizerDashboard = () => {
             setSort(e.target.value);
             setPage(1);
           }}
-          className="px-4 py-2 rounded-lg w-full md:w-60 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-60 border border-yellow-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400"
         >
           <option value="desc">Sort by Newest</option>
           <option value="asc">Sort by Oldest</option>
@@ -132,7 +139,7 @@ const OrganizerDashboard = () => {
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {events.map(event => (
-            <div key={event._id} className="bg-[#1e1e1e] p-6 rounded-2xl shadow-lg space-y-4">
+            <div key={event._id} className="bg-[#1e1e1e] p-6 rounded-2xl shadow-xl transition hover:shadow-yellow-400/20 space-y-4">
               <h3 className="text-xl font-bold text-yellow-400">{event.title}</h3>
               <p className="text-sm text-gray-300">Date: {new Date(event.startDate).toLocaleDateString()}</p>
               <p className={`text-sm font-medium ${event.status === 'Upcoming' ? 'text-green-400' : 'text-gray-400'}`}>

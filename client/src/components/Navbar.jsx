@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-indigo-950 text-white">
+    <nav className="bg-[#1e1e1e] text-white">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         <Link to="/events" onClick={() => setMenuOpen(false)} className="text-2xl font-bold text-yellow-400">The Social Hub</Link>
 
@@ -59,7 +59,7 @@ const Navbar = () => {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 space-y-2 bg-indigo-950 text-white">
+        <div className="md:hidden px-4 pb-4 space-y-2 bg-[#1e1e1e] text-white">
           {user ? (
             <>
               <Link to="/dashboard" onClick={() => setMenuOpen(!menuOpen)} className="block hover:text-yellow-400 transition">Dashboard</Link>

@@ -31,7 +31,7 @@ const Dashboard = () => {
   if (error) return <div className="text-red-400 text-center mt-4">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 px-4 py-8 text-white">
+    <div className="min-h-screen bg-[#2a2a2a] px-4 py-8 text-white">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold text-yellow-400 text-center mb-10">
           Welcome, {user || 'User'} 👋
@@ -55,7 +55,7 @@ const Dashboard = () => {
               return (
                 <div
                   key={reg._id}
-                  className="bg-[#1f1f2e] rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300"
+                  className="bg-[#1e1e1e] rounded-xl shadow-lg overflow-hidden hover:shadow-yellow-400/20 transition duration-300"
                 >
                   <img
                     src={evt.image}

@@ -56,7 +56,7 @@ const Events = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 text-white px-4 py-10">
+    <div className="min-h-screen bg-[#2a2a2a] text-white px-4 py-10">
       <h1 className="text-4xl font-bold mb-8 text-center text-yellow-400">
         Explore Events
       </h1>
@@ -66,14 +66,14 @@ const Events = () => {
           placeholder="Search events..."
           value={search}
           onChange={handleSearchChange}
-          className="px-4 py-2 rounded-lg w-full md:w-64 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-64 border border-yellow-400 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <input
           type="text"
           placeholder="Event type (e.g. Music)"
           value={eventType}
           onChange={handleFilterChange}
-          className="px-4 py-2 rounded-lg w-full md:w-64 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-64 border border-yellow-400 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <input
           type="text"
@@ -81,7 +81,7 @@ const Events = () => {
           placeholder="Location"
           value={location}
           onChange={handleLocationChange}
-          className="px-4 py-2 rounded-lg w-full md:w-64 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          className="px-4 py-2 rounded-lg w-full md:w-64 border border-yellow-400 placeholder-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
         />
         <select
           value={sort}
@@ -89,7 +89,7 @@ const Events = () => {
             setSort(e.target.value);
             setPage(1);
           }}
-          className="px-4 py-2 rounded-lg w-full md:w-64 text-black border border-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400
+          className="px-4 py-2 rounded-lg w-full md:w-64 border border-yellow-400 text-black focus:outline-none focus:ring-2 focus:ring-yellow-400
                     truncate"
         >
           <option value="desc" className="truncate" title="Sort by Newest">Sort by Newest</option>
@@ -106,7 +106,7 @@ const Events = () => {
 
       {loading ? (
         <div className="flex justify-center my-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-yellow-400"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-yellow-400 placeholder-white"></div>
         </div>
       ) : events.length === 0 ? (
         <p className="text-center text-gray-300">No events found.</p>
@@ -116,12 +116,12 @@ const Events = () => {
             <Link
               key={event._id}
               to={`/events/${event._id}`}
-              className="rounded-2xl border border-purple-700 bg-gradient-to-br from-[#1f1f2e] to-[#29293f] shadow-lg hover:shadow-2xl transition duration-300 p-5"
+              className="rounded-xl bg-[#1e1e1e] shadow-lg hover:shadow-yellow-400/20 transition duration-300 p-5"
             >
               <img
                 src={event.image || "https://placehold.co/400x200"}
                 alt={event.title}
-                className="rounded-lg mb-4 h-40 w-full object-cover border border-purple-800"
+                className="rounded-lg mb-4 h-40 w-full object-cover border border-gray-800"
               />
               <h2 className="text-xl font-bold text-yellow-400 mb-1">{event.title}</h2>
               <p className="text-sm text-gray-300 mb-1">
