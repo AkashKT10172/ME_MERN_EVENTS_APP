@@ -92,7 +92,7 @@ const Profile = () => {
   if (error) return <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 py-10 px-2 text-3xl font-bold text-center">{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 py-10 px-2">
+    <div className="min-h-screen bg-[#2a2a2a] py-10 px-2">
       <div className="max-w-3xl mx-auto bg-[#1e1e1e] text-white p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center text-yellow-400 mb-6">Your Profile</h1>
 
@@ -113,7 +113,7 @@ const Profile = () => {
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-white text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 
@@ -124,7 +124,7 @@ const Profile = () => {
               type="email"
               value={formData.email}
               onChange={handleInputChange}
-              className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-yellow-300 text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-3 rounded bg-gray-800 border border-yellow-400 placeholder-white text-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-400"
             />
           </div>
 

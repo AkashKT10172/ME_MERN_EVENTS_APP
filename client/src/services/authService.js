@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://the-social-hub-vbmw.onrender.com';
 
 export const registerUser = async (userData) => {
   const response = await axios.post(`${API_URL}/api/auth/register`, userData);
