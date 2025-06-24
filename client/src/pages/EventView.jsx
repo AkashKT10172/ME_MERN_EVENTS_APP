@@ -9,7 +9,7 @@ import {
   checkUserRegistration,
 } from "../services/registrationService";
 import { deleteAnEvent } from "../services/organizerService";
-import {notifyError, notifySuccess} from '../utils/toastUtils'
+import { notifyError, notifySuccess } from "../utils/toastUtils";
 
 const EventView = () => {
   const user = useSelector((state) => state.auth.user);
@@ -36,7 +36,7 @@ const EventView = () => {
         // console.log(res);
       } catch (err) {
         setError("Failed to load event");
-        notifyError('failed to fetch event data!')
+        notifyError("failed to fetch event data!");
       } finally {
         setLoading(false);
       }
@@ -50,10 +50,10 @@ const EventView = () => {
     try {
       await registerForEvent(id);
       setRegistered(true);
-      notifySuccess('Event Registration Successful!')
+      notifySuccess("Event Registration Successful!");
     } catch (err) {
       console.error(err);
-      notifyError('Event Registration Failed!')
+      notifyError("Event Registration Failed!");
     } finally {
       setRegistering(false);
     }
@@ -64,24 +64,24 @@ const EventView = () => {
     try {
       await cancelRegistration(id);
       setRegistered(false);
-      notifySuccess('Registration Cancellation Successful!')
+      notifySuccess("Registration Cancellation Successful!");
     } catch (err) {
       console.error(err);
-      notifyError('Registration Cancellation Failed!')
+      notifyError("Registration Cancellation Failed!");
     } finally {
       setRegistering(false);
     }
   };
 
   const handleDelete = async (eventId) => {
-    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    if (!window.confirm("Are you sure you want to delete this event?")) return;
     try {
       await deleteAnEvent(eventId);
-      navigate('/events');
-      notifySuccess('Event Deletion Successful!')
+      navigate("/events");
+      notifySuccess("Event Deletion Successful!");
     } catch (err) {
       console.error(err);
-      notifyError('Event Deletion Failed!')
+      notifyError("Event Deletion Failed!");
     }
   };
 
@@ -102,61 +102,59 @@ const EventView = () => {
           <div className="text-yellow-400 text-lg mb-1">
             Status: {event.status}
           </div>
-          <div className="text-gray-300 mb-1">   
+          <div className="text-gray-300 mb-1">
             Date: {new Date(event.startDate).toLocaleDateString()}
           </div>
           <div className="text-gray-300 mb-1">Time: {event.startTime}</div>
           <div className="text-gray-400 mb-4">Location: {event.location}</div>
           <p className="text-gray-200 text-base mb-6">{event.description}</p>
 
-          <div className="flex flex-wrap gap-4">
-            {event.status === "Completed" ? (
-              <></>
-            ) : !registered ? (
+          <div className="flex gap-4 w-full max-w-xs">
+            {event.status !== "Completed" &&
+              (!registered ? (
+                <button
+                  onClick={handleRegister}
+                  disabled={registering}
+                  className={`flex-1 px-6 py-3 rounded-xl transition ${
+                    registering
+                      ? "bg-green-400 cursor-not-allowed"
+                      : "bg-green-600 hover:bg-green-700"
+                  } text-white`}
+                >
+                  {registering ? "Registering..." : "Register"}
+                </button>
+              ) : (
+                <button
+                  onClick={handleCancelRegistration}
+                  disabled={registering}
+                  className={`flex-1 px-6 py-3 rounded-xl transition ${
+                    registering
+                      ? "bg-red-400 cursor-not-allowed"
+                      : "bg-red-600 hover:bg-red-700"
+                  } text-white`}
+                >
+                  {registering ? "Cancelling..." : "Cancel Registration"}
+                </button>
+              ))}
+
+            {(role === "Admin" || mail === event.organizer.email) && (
               <button
-                onClick={handleRegister}
-                disabled={registering}
-                className={`px-6 py-3 rounded-xl transition ${
-                  registering
-                    ? "bg-green-400 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700"
-                } text-white`}
+                onClick={() => handleDelete(event._id)}
+                className="flex-1 px-6 py-3 rounded-xl transition bg-red-600 hover:bg-red-700 text-white"
               >
-                {registering ? "Registering..." : "Register"}
-              </button>
-            ) : (
-              <button
-                onClick={handleCancelRegistration}
-                disabled={registering}
-                className={`px-6 py-3 rounded-xl transition ${
-                  registering
-                    ? "bg-red-400 cursor-not-allowed"
-                    : "bg-red-600 hover:bg-red-700"
-                } text-white`}
-              >
-                {registering ? "Cancelling..." : "Cancel Registration"}
+                Delete Event
               </button>
             )}
           </div>
-          <div className="my-1 flex">
-            {
-              (role === 'Admin' || mail === event.organizer.email) && <Link to={`/admin/events/${id}`}>
-                <button
-                  className={`px-6 py-3 rounded-xl transition bg-blue-600 hover:bg-blue-700 text-white`}
-                >
+
+          <div className="w-full max-w-xs my-2">
+            {(role === "Admin" || mail === event.organizer.email) && (
+              <Link to={`/admin/events/${id}`}>
+                <button className="w-full px-6 py-3 rounded-xl transition bg-blue-600 hover:bg-blue-700 text-white">
                   See Registrations
                 </button>
               </Link>
-            }
-            {
-              role === 'Admin' || mail === event.organizer.email ?
-                <button
-                  onClick={() => handleDelete(event._id)}
-                  className={`mx-2 px-6 py-3 rounded-xl transition bg-red-600 hover:bg-red-700 text-white`}
-                >
-                  Delete Event
-                </button> : <></>
-            }
+            )}
           </div>
         </div>
       </div>
