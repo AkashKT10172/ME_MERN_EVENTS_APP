@@ -58,11 +58,13 @@ const getMyRegisteredEvents = async (req, res) => {
         select: '-__v',
         populate: {
           path: 'organizer',
-          select: 'name email', // include any fields you want to show
+          select: 'name email',
         },
       });
-
-    res.json(registrations);
+    // console.log(registrations);
+    const validRegistrations = registrations.filter(reg => reg.event !== null);
+    // console.log(validRegistrations);
+    res.json(validRegistrations);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
