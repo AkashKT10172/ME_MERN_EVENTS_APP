@@ -13,6 +13,8 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const [timeToLive, setTimeToLive] = useState(0);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -31,7 +33,12 @@ const LoginPage = () => {
       navigate('/');
     } catch (err) {
       console.error('Login failed:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      if(err.status === 429) {
+        setIsRateLimited(true);
+        setTimeToLive(err.response.data.retryAfter);
+      } else {
+        setError(err.response?.data?.message || 'Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -57,6 +64,27 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+
+  const [secondsLeft, setSecondsLeft] = useState(timeToLive);
+
+  useEffect(() => {
+    setSecondsLeft(timeToLive); // Sync countdown with rate limiter TTL
+  }, [timeToLive]);
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+
+    const timeout = setTimeout(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [secondsLeft]);
+
+  useEffect(() => {
+    if(secondsLeft <= 0) 
+      setIsRateLimited(false);
+  }, [secondsLeft]);
 
   useEffect(() => {
     if (user) navigate('/events');
@@ -93,16 +121,16 @@ const LoginPage = () => {
         />
         <button
           type="submit"
-          disabled={loading}
+          disabled={loading || isRateLimited}
           className="w-full py-3 bg-yellow-400 text-black rounded font-semibold hover:bg-yellow-300 transition disabled:opacity-60"
           aria-busy={loading}
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {isRateLimited?  `Please wait ${secondsLeft} seconds.` : loading ? 'Logging in...' : 'Login'}
         </button>
 
         <button
           type="button"
-          disabled={loading}
+          disabled={loading || isRateLimited}
           onClick={handleGoogleLogin}
           className="w-full py-3 mt-2 bg-red-600 rounded font-semibold hover:bg-red-700 transition disabled:opacity-60 flex items-center justify-center gap-2"
           aria-label="Login with Google"

@@ -10,6 +10,10 @@ const registrationRoutes = require('./routes/registrationRoutes')
 const startStatusUpdateCron = require('./utils/updateEventStatusCron');
 const emailReminderCronJob = require('./utils/eventReminderCronJob');
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
+const roleBasedRateLimiter = require('./middleware/roleBasedRateLimiter');
+const ipBasedRateLimiter = require('./middleware/ipBasedRateLimiter');
+const publicEvents = require('./routes/publicEvents');
+const {protect} = require('./middleware/authMiddleware');
 
 const app = express();
 dotenv.config();
@@ -21,12 +25,16 @@ emailReminderCronJob();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', ipBasedRateLimiter, authRoutes);
+app.use('/api/publicEvents', ipBasedRateLimiter, publicEvents);
+
+app.use(protect);  
+app.use(roleBasedRateLimiter); // role based rate limiter for protected routes
+
 app.use('/api/admin', adminRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registration', registrationRoutes);
-
 
 app.get('/', (req, res) => {
     res.send('Events Management Platform is Running!')

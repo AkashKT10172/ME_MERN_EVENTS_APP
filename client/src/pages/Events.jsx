@@ -12,6 +12,8 @@ const Events = () => {
   const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState('desc');
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const [timeToLive, setTimeToLive] = useState(0);
 
   const fetchEvents = async () => {
   setLoading(true);
@@ -29,6 +31,10 @@ const Events = () => {
     setTotalPages(res.totalPages);
   } catch (err) {
     console.error("Error fetching events", err);
+    if(err.status === 429) {
+      setIsRateLimited(true);
+      setTimeToLive(err.response.data.retryAfter);
+    }
   } finally {
     setLoading(false);
   }
@@ -55,6 +61,42 @@ const Events = () => {
     setPage(1);
   };
 
+  const [secondsLeft, setSecondsLeft] = useState(timeToLive);
+
+  useEffect(() => {
+    setSecondsLeft(timeToLive); // Sync countdown with rate limiter TTL
+  }, [timeToLive]);
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+
+    const timeout = setTimeout(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [secondsLeft]);
+
+  useEffect(() => {
+    if (secondsLeft === 0 && isRateLimited) {
+      fetchEvents();
+      setIsRateLimited(false);
+    }
+  }, [secondsLeft, isRateLimited]);
+
+
+  if(isRateLimited) return (
+    <div className="min-h-screen bg-[#2a2a2a] text-white px-4 py-10 flex justify-center items-center">
+      <div className="text-center">
+        <h4 className="text-4xl font-bold text-yellow-400 mb-4">
+          ⚠️ Request Limit Exceeded
+        </h4>
+        <p className="text-lg text-gray-300">
+          Trying again after <span className="text-yellow-300">{secondsLeft} seconds.</span>
+        </p>
+      </div>
+    </div>
+  )
   return (
     <div className="min-h-screen bg-[#2a2a2a] text-white px-4 py-10">
       <h1 className="text-4xl font-bold mb-8 text-center text-yellow-400">
