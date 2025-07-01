@@ -1,4 +1,5 @@
 const Event = require("../models/Event");
+const Redis = require('../config/redisClient');
 
 const createEvent = async (req, res) => {
   try {
@@ -17,6 +18,10 @@ const createEvent = async (req, res) => {
       category,
       organizer : req.user._id,
       status: "Upcoming",
+    });
+
+    await Redis.keys('events:*').then(keys => {
+      if (keys.length > 0) Redis.del(...keys);
     });
 
     res.status(201).json(event);
@@ -50,6 +55,13 @@ const getAllEvents = async (req, res) => {
 
     const sortOrder = sort === 'asc' ? 1 : -1;
 
+    const redisKey = `events:${JSON.stringify({ search, eventType, location, status, date, sort, page, limit })}`;
+
+    const cachedData = await Redis.get(redisKey);
+    if (cachedData) {
+      return res.status(200).json(JSON.parse(cachedData));
+    }
+
     const [events, total] = await Promise.all([
       Event.find(query)
         .skip(skip)
@@ -59,12 +71,16 @@ const getAllEvents = async (req, res) => {
       Event.countDocuments(query)
     ]);
 
-    res.status(200).json({
+    const result = {
       events,
       page,
       totalPages: Math.ceil(total / limit),
       totalEvents: total
-    });
+    };
+
+    await Redis.set(redisKey, JSON.stringify(result), 'EX', 3600);
+
+    res.status(200).json(result);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error while fetching events' });
@@ -104,6 +120,10 @@ const updateEvent = async (req, res) => {
     Object.assign(event, updates);
     await event.save();
 
+    await Redis.keys('events:*').then(keys => {
+      if (keys.length > 0) Redis.del(...keys);
+    });
+
     res.json({ message: "Event updated", event });
   } catch (err) {
     res.status(500).json({ message: "Server error while updating event" });
@@ -125,6 +145,11 @@ const deleteEvent = async (req, res) => {
     }
 
     await event.deleteOne();
+
+    await Redis.keys('events:*').then(keys => {
+      if (keys.length > 0) Redis.del(...keys);
+    });
+
     res.json({ message: "Event deleted" });
   } catch (err) {
     console.error(err);
