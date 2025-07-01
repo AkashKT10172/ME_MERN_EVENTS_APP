@@ -1,8 +1,8 @@
 const redis = require('../config/redisClient');
 
 const ROLE_LIMITS = {
-  Participant: 5,
-  Organizer: 10,
+  Participant: 10,
+  Organizer: 20,
   Admin: 100
 };
 
@@ -26,7 +26,7 @@ const roleBasesRateLimiter = async (req, res, next) => {
       const ttl = await redis.ttl(key);
       return res.status(429).json({
         error: 'Too many requests. Please wait.',
-        retryAfter: `${ttl} seconds`
+        retryAfter: ttl
       });
     }
 

@@ -10,24 +10,64 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const [timeToLive, setTimeToLive] = useState(0);
 
-  useEffect(() => {
-    const fetchDashboard = async () => {
+  const fetchDashboard = async () => {
       try {
         const res = await getUsersRegistration();
         setEvents(res);
       } catch (err) {
-        console.error(err);
+        if(err.status === 429) {
+          setIsRateLimited(true);
+          setTimeToLive(err.response.data.retryAfter);
+        }
         setError('Failed to load dashboard');
         notifyError('Failed to load dashboard!');
       } finally {
         setLoading(false);
       }
     };
+  useEffect(() => {
     fetchDashboard();
   }, []);
 
+  const [secondsLeft, setSecondsLeft] = useState(timeToLive);
+
+  useEffect(() => {
+    setSecondsLeft(timeToLive); // Sync countdown with rate limiter TTL
+  }, [timeToLive]);
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+
+    const timeout = setTimeout(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [secondsLeft]);
+
+  useEffect(() => {
+    if (secondsLeft === 0 && isRateLimited) {
+      fetchDashboard();
+      setIsRateLimited(false);
+    }
+  }, [secondsLeft, isRateLimited]);
+
   if (loading) return <Spinner />;
+  if(isRateLimited) return (
+    <div className="min-h-screen bg-[#2a2a2a] text-white px-4 py-10 flex justify-center items-center">
+      <div className="text-center">
+        <h4 className="text-4xl font-bold text-yellow-400 mb-4">
+          ⚠️ Request Limit Exceeded
+        </h4>
+        <p className="text-lg text-gray-300">
+          Trying again after <span className="text-yellow-300">{secondsLeft} seconds.</span>
+        </p>
+      </div>
+    </div>
+  )
   if (error) return <div className="text-red-400 text-center mt-4">{error}</div>;
 
   return (

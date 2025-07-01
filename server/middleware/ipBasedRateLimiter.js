@@ -1,7 +1,7 @@
 const redis = require('../config/redisClient');
 
 const RATE_LIMIT_WINDOW = 60;
-const MAX_REQUESTS = 5;
+const MAX_REQUESTS = 10;
 
 const ipBasedRateLimiter = async (req, res, next) => {
   try {

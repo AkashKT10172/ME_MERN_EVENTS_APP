@@ -19,22 +19,29 @@ const Profile = () => {
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [organizerRequest, setOraganizerRequest] = useState('');
+  const [isRateLimited, setIsRateLimited] = useState(false);
+  const [timeToLive, setTimeToLive] = useState(0);
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const user = await fetchUserProfile();
-        setFormData({ name: user.name, email: user.email, password: '', avatar: null });
-        setAvatarUrl(user.avatar);
-        setRole(user.role);
-        setOraganizerRequest(user.organizerApprovalStatus);
-      } catch {
-        setError('Failed to fetch profile');
-        notifyError('Failed to fetch profile')
-      } finally {
-        setLoading(false);
+  const fetchProfileData = async () => {
+    try {
+      const user = await fetchUserProfile();
+      setFormData({ name: user.name, email: user.email, password: '', avatar: null });
+      setAvatarUrl(user.avatar);
+      setRole(user.role);
+      setOraganizerRequest(user.organizerApprovalStatus);
+    } catch (err){
+      if(err.status === 429) {
+        setIsRateLimited(true);
+        setTimeToLive(err.response.data.retryAfter);
       }
-    };
+      setError('Failed to fetch profile');
+      notifyError('Failed to fetch profile')
+    } finally {
+      setLoading(false);
+    }
+  };
+    
+  useEffect(() => {
     fetchProfileData();
   }, []);
 
@@ -88,9 +95,43 @@ const Profile = () => {
     }
   } 
 
-  if (loading) return <Spinner />;
-  if (error) return <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-800 to-indigo-900 py-10 px-2 text-3xl font-bold text-center">{error}</div>;
+  const [secondsLeft, setSecondsLeft] = useState(timeToLive);
 
+  useEffect(() => {
+    setSecondsLeft(timeToLive); // Sync countdown with rate limiter TTL
+  }, [timeToLive]);
+
+  useEffect(() => {
+    if (secondsLeft <= 0) return;
+
+    const timeout = setTimeout(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [secondsLeft]);
+
+  useEffect(() => {
+    if (secondsLeft === 0 && isRateLimited) {
+      fetchProfileData();
+      setIsRateLimited(false);
+    }
+  }, [secondsLeft, isRateLimited]);
+
+  if (loading) return <Spinner />;
+  if(isRateLimited) return (
+    <div className="min-h-screen bg-[#2a2a2a] text-white px-4 py-10 flex justify-center items-center">
+      <div className="text-center">
+        <h4 className="text-4xl font-bold text-yellow-400 mb-4">
+          ⚠️ Request Limit Exceeded
+        </h4>
+        <p className="text-lg text-gray-300">
+          Trying again after <span className="text-yellow-300">{secondsLeft} seconds.</span>
+        </p>
+      </div>
+    </div>
+  )
+  if (error) return <div className="min-h-screen bg-[#2a2a2a] py-10 px-2 text-3xl font-bold text-center">{error}</div>;
   return (
     <div className="min-h-screen bg-[#2a2a2a] py-10 px-2">
       <div className="max-w-3xl mx-auto bg-[#1e1e1e] text-white p-8 rounded-lg shadow-lg">
